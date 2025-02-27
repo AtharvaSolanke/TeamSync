@@ -6,11 +6,11 @@ import bcrypt from 'bcryptjs'
 export const signup = async (req, res) => {
     // get user details that he/she sent
     console.log("Received Request Body:", req.body);
-    const { fullName, email, password } = req.body
+    const { username, email, password } = req.body
 
     try {
         // check if all fileds are there or not
-        if (!fullName || !email || !password) {
+        if (!username || !email || !password) {
             return res
                 .status(400)
                 .json({
@@ -47,13 +47,23 @@ export const signup = async (req, res) => {
                 })
         }
 
+        // check for username already exists
+        const user1 = await User.findOne({ username })
+        if (user1) {
+            return res
+                .status(400)
+                .json({
+                    message: "user with same username already exists"
+                })
+        }
+
         //create salt and hash password
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
 
         // create new user with User model
         const newUser = new User({
-            fullName,
+            username,
             email,
             // team,
             // teamId,
@@ -70,7 +80,7 @@ export const signup = async (req, res) => {
                 .status(200)
                 .json({
                     _id: newUser._id,
-                    fullName: newUser.fullName,
+                    username: newUser.username,
                     email: newUser.email,
                     profileImage: newUser.profileImage,
                     // team: newUser.team,
@@ -117,7 +127,7 @@ export const login = async (req, res) => {
 
         res.status(200).json({
             _id: user._id,
-            fullName: user.fullName,
+            username: user.username,
             email: user.email,
             profileImage: user.profileImage,
             // team: user.team,

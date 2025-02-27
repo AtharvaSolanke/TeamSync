@@ -69,7 +69,7 @@
 
 //             {/* User info - only visible on larger screens */}
 //             <div className="hidden lg:block text-left min-w-0">
-//               <div className="font-medium truncate">{user.fullName}</div>
+//               <div className="font-medium truncate">{user.username}</div>
 //               <div className="text-sm text-zinc-400">
 //                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
 //               </div>
@@ -106,7 +106,7 @@ const Sidebar = () => {
 
   const filteredUsers = users
     .filter((user) => (showOnlineOnly ? onlineUsers.includes(user._id) : true))
-    .filter((user) => user.fullName.toLowerCase().includes(searchTerm.toLowerCase()));
+    .filter((user) => user.username.toLowerCase().includes(searchTerm.toLowerCase()));
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -171,7 +171,7 @@ const Sidebar = () => {
             </div>
 
             <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user.fullName}</div>
+              <div className="font-medium truncate">{user.username}</div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
