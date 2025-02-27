@@ -37,9 +37,19 @@ if (process.env.NODE_ENV === "production") {
 
     // Handle all routes for a single-page application
     app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
     });
 }
+
+// if (process.env.NODE_ENV === "production") {
+//     // serve static frontend files
+//     app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+//     // handle all routes for single page application
+//     app.get("*", (req, res) => {
+//         res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+//     });
+// }
 
 // Start the server
 server.listen(PORT, () => {
