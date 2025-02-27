@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -26,33 +26,27 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-// Fix for __dirname in ES modules
+// ✅ Fix `__dirname` for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Check environment for production or deployment
-if (process.env.NODE_ENV === "production") {
-    // Serve static frontend files
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+// ✅ Serve Correct Frontend Build Path
+const frontendPath = path.join(__dirname, "../../frontend/dist");
 
-    // Handle all routes for a single-page application
+if (process.env.NODE_ENV === "production") {
+    console.log(`🚀 Serving frontend from: ${frontendPath}`);
+
+    // Serve static frontend files
+    app.use(express.static(frontendPath));
+
+    // Handle all routes for SPA
     app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+        res.sendFile(path.join(frontendPath, "index.html"));
     });
 }
 
-// if (process.env.NODE_ENV === "production") {
-//     // serve static frontend files
-//     app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-//     // handle all routes for single page application
-//     app.get("*", (req, res) => {
-//         res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-//     });
-// }
-
 // Start the server
 server.listen(PORT, () => {
-    console.log("Server is running on PORT:", PORT);
+    console.log(`✅ Server is running on PORT: ${PORT}`);
     connectDB();
 });
